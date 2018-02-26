@@ -1,5 +1,3 @@
-# matrix003
-
 #include "stdafx.h"
 #include <iostream>
 #include <sstream>
@@ -31,7 +29,7 @@ public:
 			delete[] data;
 
 			data = new int *[other.rows];
-			for (unsigned int i = 0; i < rows; ++i) {
+			for (unsigned int i = 0; i < other.rows; ++i) {
 				data[i] = new int[other.columns];
 				for (unsigned int j = 0; j < other.columns; ++j) {
 					data[i][j] = other.data[i][j];
