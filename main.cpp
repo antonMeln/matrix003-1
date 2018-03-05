@@ -70,7 +70,7 @@ public:
 					result.data[i][j] = other.data[i][j] + data[i][j];
 				}
 			}
-		
+
 			result.rows = other.rows;
 			result.columns = other.columns;
 
@@ -111,25 +111,23 @@ public:
 
 		matrix_t result;
 
-
-			
-			result.data = new int *[rows];
-			for (int i = 0; i < rows; i++) {
-				result.data[i] = new int[other.columns];
-				for (int j = 0; j < other.columns; j++) {
-					result.data[i][j] = 0;
-				}
+		result.data = new int *[rows];
+		for (int i = 0; i < rows; i++) {
+			result.data[i] = new int[other.columns];
+			for (int j = 0; j < other.columns; j++) {
+				result.data[i][j] = 0;
 			}
+		}
 
-			for (int i = 0; i < rows; i++) {
-				for (int j = 0; j < other.columns; j++) {
-					for (int k = 0; k < columns; k++)
-						result.data[i][j] += data[i][k] * other.data[k][j];
-				}
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < other.columns; j++) {
+				for (int k = 0; k < columns; k++)
+					result.data[i][j] += data[i][k] * other.data[k][j];
 			}
+		}
 
-			result.rows = rows;
-			result.columns = other.columns;
+		result.rows = rows;
+		result.columns = other.columns;
 
 		return result;
 	}
@@ -154,8 +152,7 @@ public:
 	}
 
 
-	std::ifstream & read(std::ifstream & file)
-	{
+	std::ifstream & read(std::ifstream & file) {
 		unsigned int rows_e = 0;
 		unsigned int columns_e = 0;
 		char symbol;
@@ -165,7 +162,10 @@ public:
 
 		if (getline(file, line)) {
 			istringstream sstream(line);
-			if (sstream >> rows_e && sstream >> symbol && symbol == ',' && sstream >> columns_e && sstream.eof()) {
+			if (sstream >> rows_e && 
+				sstream >> symbol && symbol == ',' && 
+				sstream >> columns_e && 
+				sstream.eof()) {
 				elements = new int *[rows_e];
 				for (unsigned int i = 0; i < rows_e && success; i++) {
 					elements[i] = new int[columns_e];
@@ -224,12 +224,8 @@ public:
 	}
 };
 
-
-
-
 int main()
 {
-
 	matrix_t matrix1;
 
 	string line;
@@ -250,36 +246,36 @@ int main()
 
 					switch (oper) {
 
-					case '+':
-						matrix2.read(file2);
-						result = matrix1.add(matrix2);
-						if (matrix2.success && result.success) {
-							result.write(cout);
-						}
-						else cout << "An error has occured while reading input data";
+						case '+':
+							matrix2.read(file2);
+							result = matrix1.add(matrix2);
+							if (matrix2.success && result.success) {
+								result.write(cout);
+							}
+							else cout << "An error has occured while reading input data";
 
-						break;
+							break;
 
-					case '-':
-						matrix2.read(file2);
-						result = matrix1.sub(matrix2);
-						if (matrix2.success && result.success) {
-							result.write(cout);
+						case '-':
+							matrix2.read(file2);
+							result = matrix1.sub(matrix2);
+							if (matrix2.success && result.success) {
+								result.write(cout);
 
-						}
-						else cout << "An error has occured while reading input data";
+							}
+							else cout << "An error has occured while reading input data";
 
-						break;
+							break;
 
-					case '*':
-						matrix2.read(file2);
-						result = matrix1.mul(matrix2);
-						if (matrix2.success && result.success) {
-							result.write(cout);
-						}
-						else cout << "An error has occured while reading input data";
+						case '*':
+							matrix2.read(file2);
+							result = matrix1.mul(matrix2);
+							if (matrix2.success && result.success) {
+								result.write(cout);
+							}
+							else cout << "An error has occured while reading input data";
 
-						break;
+							break;
 					}
 
 				}
@@ -291,12 +287,12 @@ int main()
 				if (matrix1.success) {
 					matrix_t result;
 					switch (oper) {
-					case 'T':
-						result = matrix1.trans(matrix1);
-						if (result.success) {
-							result.write(cout);
-						}
-						break;
+						case 'T':
+							result = matrix1.trans(matrix1);
+							if (result.success) {
+								result.write(cout);
+							}
+							break;
 					}
 				}
 				else cout << "An error has occured while reading input data";
@@ -308,5 +304,6 @@ int main()
 
 	cin.get();
 	cin.get();
+
 	return 0;
 }
