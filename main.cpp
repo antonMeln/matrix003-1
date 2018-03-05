@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -43,6 +42,19 @@ public:
 		return *this;
 	}
 
+	matrix_t(matrix_t const & other) {
+		data = new int *[other.rows];
+		for (unsigned int i = 0; i < other.rows; ++i) {
+			data[i] = new int[other.columns];
+			for (unsigned int j = 0; j < other.columns; ++j) {
+				data[i][j] = other.data[i][j];
+			}
+		}
+
+		rows = other.rows;
+		columns = other.columns;
+	}
+
 	matrix_t add(matrix_t & other) const {
 
 		matrix_t result;
@@ -58,6 +70,7 @@ public:
 					result.data[i][j] = other.data[i][j] + data[i][j];
 				}
 			}
+		
 			result.rows = other.rows;
 			result.columns = other.columns;
 
@@ -98,26 +111,25 @@ public:
 
 		matrix_t result;
 
-		if (other.columns == rows) {
-			int n = other.columns;
-			result.data = new int *[n];
-			for (int i = 0; i < n; i++) {
-				result.data[i] = new int[n];
-			}
 
-			for (int i = 0; i < n; i++) {
-				for (int j = 0; j < n; j++) {
-					data[i][j] = 0;
-					for (int k = 0; k < n; k++)
-						data[i][j] += other.data[i][k] * data[k][j];
+			
+			result.data = new int *[rows];
+			for (int i = 0; i < rows; i++) {
+				result.data[i] = new int[other.columns];
+				for (int j = 0; j < other.columns; j++) {
+					result.data[i][j] = 0;
 				}
 			}
-			result.data = data;
+
+			for (int i = 0; i < rows; i++) {
+				for (int j = 0; j < other.columns; j++) {
+					for (int k = 0; k < columns; k++)
+						result.data[i][j] += data[i][k] * other.data[k][j];
+				}
+			}
+
 			result.rows = rows;
 			result.columns = other.columns;
-
-		}
-		else success = false;
 
 		return result;
 	}
@@ -132,9 +144,7 @@ public:
 		result.data = new int *[result.rows];
 		for (int i = 0; i < result.rows; i++) {
 			result.data[i] = new int[result.columns];
-		}
 
-		for (int i = 0; i < result.rows; i++) {
 			for (int j = 0; j < result.columns; j++) {
 				result.data[i][j] = other.data[j][i];
 			}
@@ -156,7 +166,7 @@ public:
 		if (getline(file, line)) {
 			istringstream sstream(line);
 			if (sstream >> rows_e && sstream >> symbol && symbol == ',' && sstream >> columns_e && sstream.eof()) {
-				elements = new int * [rows_e];
+				elements = new int *[rows_e];
 				for (unsigned int i = 0; i < rows_e && success; i++) {
 					elements[i] = new int[columns_e];
 					string line;
@@ -195,7 +205,7 @@ public:
 	}
 
 
-	std::ostream & write(std::ostream & stream)const {
+	std::ostream & write(std::ostream & stream) const {
 		cout << endl;
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < columns; j++) {
@@ -239,6 +249,7 @@ int main()
 					matrix_t result;
 
 					switch (oper) {
+
 					case '+':
 						matrix2.read(file2);
 						result = matrix1.add(matrix2);
@@ -252,10 +263,9 @@ int main()
 					case '-':
 						matrix2.read(file2);
 						result = matrix1.sub(matrix2);
-						
 						if (matrix2.success && result.success) {
 							result.write(cout);
-							
+
 						}
 						else cout << "An error has occured while reading input data";
 
@@ -266,13 +276,12 @@ int main()
 						result = matrix1.mul(matrix2);
 						if (matrix2.success && result.success) {
 							result.write(cout);
-							
 						}
 						else cout << "An error has occured while reading input data";
 
 						break;
 					}
-					
+
 				}
 				else cout << "An error has occured while reading input data";
 			}
@@ -280,19 +289,15 @@ int main()
 				ifstream file1(filename1);
 				matrix1.read(file1);
 				if (matrix1.success) {
-
+					matrix_t result;
 					switch (oper) {
 					case 'T':
-						matrix_t result;
 						result = matrix1.trans(matrix1);
 						if (result.success) {
 							result.write(cout);
-							
 						}
 						break;
 					}
-				
-
 				}
 				else cout << "An error has occured while reading input data";
 			}
