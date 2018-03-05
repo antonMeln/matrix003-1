@@ -55,7 +55,7 @@ public:
 		columns = other.columns;
 	}
 
-	matrix_t add(matrix_t & other) const {
+	matrix_t add(matrix_t const & other) const {
 
 		matrix_t result;
 
@@ -107,7 +107,7 @@ public:
 	}
 
 
-	matrix_t mul(matrix_t & other) {
+	matrix_t mul(matrix_t const & other) {
 
 		matrix_t result;
 
@@ -133,18 +133,18 @@ public:
 	}
 
 
-	matrix_t trans(matrix_t & other) {
+	matrix_t trans() {
 		matrix_t result;
 
-		result.rows = other.columns;
-		result.columns = other.rows;
+		result.rows = columns;
+		result.columns = rows;
 
 		result.data = new int *[result.rows];
 		for (int i = 0; i < result.rows; i++) {
 			result.data[i] = new int[result.columns];
 
 			for (int j = 0; j < result.columns; j++) {
-				result.data[i][j] = other.data[j][i];
+				result.data[i][j] = data[j][i];
 			}
 		}
 
@@ -288,7 +288,7 @@ int main()
 					matrix_t result;
 					switch (oper) {
 						case 'T':
-							result = matrix1.trans(matrix1);
+							result = matrix1.trans();
 							if (result.success) {
 								result.write(cout);
 							}
